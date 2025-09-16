@@ -1,0 +1,1110 @@
+/* style.css */
+
+/* 全局樣式和顏色變數 */
+:root {
+    --border-color: #404040;
+    --primary-color: #3a96dd;
+    --primary-color-focus-shadow: rgba(58, 150, 221, 0.3); /*  焦點輝光顏色 */
+    --danger-color: #c0392b;
+    --danger-color-hover: #e74c3c;
+    --background-primary: #1e1e1e;
+    --background-secondary: #252526;
+    --background-tertiary: #2c2c2c;
+    --background-ui: #4a4a4a;
+    --background-ui-hover: #5a5a5a;
+    --text-primary: #d4d4d4;
+    --text-secondary: #e0e0e0;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+}
+
+/* 自定義滾動條 */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #2d2d2d; border-radius: 5px; }
+::-webkit-scrollbar-thumb { background: var(--background-ui); border-radius: 5px; border: 2px solid #2d2d2d; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--background-ui-hover); }
+* { scrollbar-width: thin; scrollbar-color: var(--background-ui) #2d2d2d; }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* 工具列 */
+.toolbar {
+    padding: 10px;
+    background-color: var(--background-tertiary);
+    border-bottom: 1px solid #3a3a3a;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+/* 統一按鈕和下拉選單樣式 */
+.toolbar button, .toolbar select {
+    background-color: var(--background-ui);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color); /* 使用變數 */
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.toolbar button:hover, .toolbar select:hover {
+    background-color: var(--background-ui-hover);
+}
+
+.toolbar select {
+    padding: 4px 8px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23e0e0e0' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+}
+
+.toolbar .spacer {
+    flex-grow: 1;
+}
+
+/* 主要內容區域 */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: calc(100vh - 51px);
+    overflow: hidden;
+}
+
+.editor-pane, .output-pane {
+    flex-basis: 50%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-pane { height: 50%; }
+
+/* 分隔條樣式 */
+.resizer {
+    background-color: #3a3a3a;
+    height: 5px;
+    cursor: ns-resize;
+    flex-shrink: 0;
+    transition: background-color 0.2s;
+}
+.resizer:hover { background-color: var(--primary-color); }
+
+/* CodeMirror 編輯器樣式 */
+.CodeMirror {
+    height: 100% !important;
+    font-size: 14px;
+    background-color: var(--background-primary);
+    font-family: inherit;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+/* CodeMirror 選取文字樣式 */
+.CodeMirror-selected {
+    background: #214283 !important; /* 更亮的藍色背景 */
+}
+
+/* CodeMirror 游標所在行 */
+.CodeMirror-activeline-background {
+    background: rgba(58, 110, 165, 0.2) !important; /* 半透明藍色背景 */
+}
+
+.cm-s-material-darker.CodeMirror { 
+    background-color: var(--background-primary); 
+    color: var(--text-primary); 
+}
+.cm-s-material-darker .CodeMirror-gutters { 
+    background: var(--background-primary); 
+    border-right: 1px solid #333; 
+}
+.cm-s-material-darker .cm-comment { 
+    color: #6a9955; 
+}
+
+/* 選取文字時的樣式 */
+.cm-s-material-darker .CodeMirror-selected {
+    background: #214283 !important;
+}
+
+/* 游標所在行 */
+.cm-s-material-darker .CodeMirror-activeline-background {
+    background: rgba(58, 110, 165, 0.2) !important;
+}
+
+/* 選取範圍的邊框 */
+.CodeMirror-selection {
+    background: #214283 !important;
+}
+
+/* 覆寫 CodeMirror 錯誤樣式 - 使用類似 JetBrains 的柔和顏色 */
+.cm-s-material-darker .cm-error {
+    color: inherit !important;
+    background-color: rgba(244, 67, 54, 0.15) !important; /* 柔和的半透明紅色背景 */
+    border-bottom: 1px solid rgba(244, 67, 54, 0.4) !important; /* 底部邊框提示 */
+    border-radius: 2px !important;
+}
+
+/* 預設 CodeMirror 主題的錯誤樣式也覆寫 */
+.cm-error {
+    color: inherit !important;
+    background-color: rgba(244, 67, 54, 0.15) !important;
+    border-bottom: 1px solid rgba(244, 67, 54, 0.4) !important;
+    border-radius: 2px !important;
+}
+
+.cm-invalidchar {
+    color: inherit !important;
+    background-color: rgba(244, 67, 54, 0.15) !important;
+    border-bottom: 1px solid rgba(244, 67, 54, 0.4) !important;
+    border-radius: 2px !important;
+}
+
+/* 特別處理 VBScript 行連接符 _ 不應該被標記為錯誤 */
+.cm-s-material-darker .cm-operator {
+    color: #89ddff !important;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+/* 確保底線在行尾時不被錯誤標記 */
+.CodeMirror .cm-trailing {
+    background-color: transparent !important;
+}
+
+/* VBScript 特定樣式增強 */
+.cm-s-material-darker .cm-keyword {
+    color: #c792ea !important;
+}
+
+.cm-s-material-darker .cm-variable {
+    color: #f07178 !important;
+}
+
+.cm-s-material-darker .cm-string {
+    color: #c3e88d !important;
+}
+
+.cm-s-material-darker .cm-comment {
+    color: #6a9955 !important;
+    font-style: italic;
+}
+
+.cm-s-material-darker .cm-number {
+    color: #ff5370 !important;
+}
+
+/* 輸出區樣式 */
+#output {
+    padding: 10px;
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 14px;
+    height: 100%;
+    box-sizing: border-box;
+    font-family: 'Consolas', 'Monaco', 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace;
+    line-height: 1.4;
+    overflow-y: auto;
+    color: var(--text-primary);
+    background-color: var(--background-primary);
+    /* 優化字體渲染 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-variant-ligatures: none;
+    /* 確保文字清晰可見 */
+    text-shadow: none;
+    letter-spacing: 0.02em;
+}
+
+#output.error { 
+    background-color: var(--background-primary);
+}
+
+/* 確保正常輸出顯示白色，錯誤輸出顯示紅色 */
+#output span {
+    white-space: pre-wrap;
+    font-family: inherit;
+}
+
+/* 確保混用模式下的文字清晰可見 */
+#output div {
+    color: inherit;
+    background-color: transparent;
+}
+
+#output #script-output {
+    font-family: 'Consolas', 'Monaco', 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace;
+    color: var(--text-primary);
+    background-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* --- 彈出視窗 (Modal) 樣式 --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--background-secondary);
+    padding: 20px;
+    border: 1px solid #3c3c3c;
+    border-radius: 8px;
+    width: 60%;
+    max-width: 700px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content h2 { margin-top: 0; }
+.close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; align-self: flex-end; }
+.modal-body { flex-grow: 1; overflow-y: auto; padding-right: 10px; }
+
+#pre-scripts-list { margin-bottom: 20px; }
+
+/* 修改：這是腳本項目的外層容器 */
+.pre-script-item {
+    background-color: #333;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border-left: 3px solid var(--primary-color);
+}
+
+/* 新增：顯示模式的容器 */
+.display-view {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.pre-script-item pre {
+    margin: 0;
+    white-space: pre-wrap;
+    max-height: 150px;
+    overflow-y: auto;
+    flex-grow: 1;
+    background-color: var(--background-primary);
+    padding: 8px;
+    border-radius: 3px;
+    color: var(--text-primary);
+    font-size: 13px;
+}
+
+/* 新增：放置按鈕的容器 */
+.script-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+/* 按鈕樣式 */
+.script-actions .btn-remove {
+    background-color: var(--danger-color);
+    border: 1px solid var(--border-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.script-actions .btn-remove:hover {
+    background-color: var(--danger-color-hover);
+}
+.script-actions .btn-edit {
+    background-color: var(--background-ui);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.script-actions .btn-edit:hover {
+    background-color: var(--background-ui-hover);
+}
+
+/* --- 新增：編輯模式的樣式 --- */
+.edit-view {
+    display: none; /* 預設隱藏 */
+    flex-direction: column;
+    gap: 10px;
+}
+.edit-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 80px;
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.edit-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.edit-controls button {
+    padding: 5px 15px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-save {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+.btn-save:hover {
+    opacity: 0.9;
+}
+.btn-cancel {
+    background-color: var(--background-ui);
+    color: var(--text-secondary);
+}
+.btn-cancel:hover {
+    background-color: var(--background-ui-hover);
+}
+
+/* --- 新增腳本表單 (無變動) --- */
+#new-pre-script-input {
+    width: 100%;
+    box-sizing: border-box;
+    height: 100px;
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#add-pre-script-btn {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+#add-pre-script-btn:hover { opacity: 0.9; }
+
+/* --- 擴展後的統一焦點樣式 --- */
+.toolbar button:focus,
+.toolbar select:focus,
+#new-pre-script-input:focus,
+.script-actions button:focus,
+.edit-textarea:focus,
+.edit-controls button:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color-focus-shadow);
+}
+
+
+/* --- 通知樣式 (無變動) --- */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    border-radius: 4px;
+    color: white;
+    z-index: 1001;
+    opacity: 0.95;
+    transform: translateX(0);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.notification.success { background-color: #4caf50; }
+.notification.error { background-color: #f44336; }
+.notification.warning { background-color: #ff9800; }
+.notification.info { background-color: #2196f3; }
+.notification.fade-out { opacity: 0; transform: translateX(100%); }
+
+/* === 搜尋功能樣式修正 === */
+.search-box {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 1000; /* 提高層級 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* CodeMirror 搜尋對話框樣式修正 */
+.CodeMirror-dialog {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    left: auto !important;
+    background-color: var(--background-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    z-index: 1000 !important;
+    padding: 10px !important;
+}
+
+.CodeMirror-dialog input {
+    background-color: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 3px !important;
+    padding: 4px 8px !important;
+    margin-right: 5px !important;
+}
+
+.CodeMirror-dialog input:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 1px var(--primary-color-focus-shadow) !important;
+    outline: none !important;
+}
+
+.CodeMirror-dialog button {
+    background-color: var(--background-ui) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 3px !important;
+    padding: 3px 8px !important;
+    color: var(--text-secondary) !important;
+    cursor: pointer !important;
+    margin-left: 5px !important;
+}
+
+.CodeMirror-dialog button:hover {
+    background-color: var(--background-ui-hover) !important;
+}
+
+/* 確保編輯器區域相對定位 */
+.editor-pane {
+    position: relative;
+}
+
+/* 搜尋高亮樣式 */
+.CodeMirror-search-match {
+    background-color: rgba(255, 215, 0, 0.5) !important;
+    border: 1px solid #ffd700 !important;
+}
+
+.CodeMirror-search-match-selected {
+    background-color: rgba(255, 107, 53, 0.8) !important;
+    border: 1px solid #ff6b35 !important;
+}
+/* === 輸出區搜尋功能樣式 === */
+.search-box {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.search-box input {
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    padding: 4px 8px;
+    color: var(--text-primary);
+    font-size: 12px;
+    width: 120px;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color-focus-shadow);
+}
+
+.search-box button {
+    background-color: var(--background-ui);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    padding: 3px 6px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.search-box button:hover {
+    background-color: var(--background-ui-hover);
+}
+
+.search-box span {
+    font-size: 11px;
+    color: var(--text-secondary);
+    min-width: 30px;
+    text-align: center;
+}
+
+/* 輸出區搜尋高亮樣式 */
+.search-highlight {
+    background-color: #ffd700;
+    color: #000;
+    border-radius: 2px;
+    padding: 1px 2px;
+}
+
+.search-highlight.current {
+    background-color: #ff6b35;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* 確保輸出區相對定位 */
+.output-pane {
+    position: relative;
+}
+
+/* === 輸出區連結樣式 === */
+.output-link {
+    color: #4CAF50 !important; /* 綠色連結 */
+    text-decoration: underline;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 2px;
+    padding: 1px 2px;
+}
+
+.output-link:hover {
+    color: #66BB6A !important; /* 較亮的綠色 */
+    background-color: rgba(76, 175, 80, 0.1);
+    text-decoration: none;
+}
+
+.output-link.ctrl-hover {
+    background-color: rgba(76, 175, 80, 0.2);
+    box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
+}
+
+/* === 連結確認對話框樣式 === */
+.link-confirm-modal {
+    max-width: 500px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #2a2a2a, #1e1e1e);
+    border: 2px solid #3a3a3a;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    animation: slideIn 0.3s ease-out;
+}
+
+.link-confirm-modal .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 25px 15px;
+    border-bottom: 1px solid #3a3a3a;
+    background: linear-gradient(90deg, #4CAF5020, #2196F320);
+    border-radius: 10px 10px 0 0;
+}
+
+.link-confirm-modal .link-icon {
+    font-size: 28px;
+    color: #4CAF50;
+}
+
+.link-confirm-modal h3 {
+    margin: 0;
+    color: #4CAF50;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.link-confirm-modal .modal-body {
+    padding: 20px 25px;
+}
+
+.link-confirm-modal .modal-body p {
+    margin: 0 0 15px 0;
+    color: #e0e0e0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.link-confirm-modal .link-url {
+    background-color: var(--background-primary);
+    border: 1px solid #4CAF50;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    color: #4CAF50;
+    word-break: break-all;
+    margin: 10px 0;
+}
+
+.link-confirm-modal .modal-footer {
+    padding: 15px 25px 25px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.link-confirm-modal .modal-footer button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+}
+
+.link-confirm-modal .btn-open-link {
+    background: linear-gradient(145deg, #4CAF50, #45a049);
+    color: white;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.link-confirm-modal .btn-open-link:hover {
+    background: linear-gradient(145deg, #45a049, #4CAF50);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
+}
+
+.link-confirm-modal .btn-cancel-link {
+    background: linear-gradient(145deg, #666, #555);
+    color: white;
+    box-shadow: 0 4px 8px rgba(102, 102, 102, 0.3);
+}
+
+.link-confirm-modal .btn-cancel-link:hover {
+    background: linear-gradient(145deg, #555, #666);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(102, 102, 102, 0.4);
+}
+
+/* 關閉確認對話框樣式 */
+.close-confirm-modal {
+    max-width: 450px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #2a2a2a, #1e1e1e);
+    border: 2px solid #3a3a3a;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    animation: slideIn 0.3s ease-out;
+}
+
+.close-confirm-modal .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 25px 15px;
+    border-bottom: 1px solid #3a3a3a;
+    background: linear-gradient(90deg, #ff6b6b20, #ffa50020);
+    border-radius: 10px 10px 0 0;
+}
+
+.close-confirm-modal .warning-icon {
+    font-size: 28px;
+    animation: pulse 2s infinite;
+}
+
+.close-confirm-modal h2 {
+    margin: 0;
+    color: #ff9800;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.close-confirm-modal .modal-body {
+    padding: 20px 25px;
+}
+
+.close-confirm-modal .modal-body p {
+    margin: 0;
+    color: #e0e0e0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.close-confirm-modal .modal-footer {
+    padding: 15px 25px 25px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.close-confirm-modal .modal-footer button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+}
+
+.close-confirm-modal .btn-primary {
+    background: linear-gradient(145deg, #4caf50, #45a049);
+    color: white;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.close-confirm-modal .btn-primary:hover {
+    background: linear-gradient(145deg, #45a049, #4caf50);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
+}
+
+.close-confirm-modal .btn-secondary {
+    background: linear-gradient(145deg, #ff9800, #f57c00);
+    color: white;
+    box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
+}
+
+.close-confirm-modal .btn-secondary:hover {
+    background: linear-gradient(145deg, #f57c00, #ff9800);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 152, 0, 0.4);
+}
+
+.close-confirm-modal .btn-cancel {
+    background: linear-gradient(145deg, #666, #555);
+    color: white;
+    box-shadow: 0 4px 8px rgba(102, 102, 102, 0.3);
+}
+
+.close-confirm-modal .btn-cancel:hover {
+    background: linear-gradient(145deg, #555, #666);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(102, 102, 102, 0.4);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* 錯誤行高亮樣式 */
+.error-line-bg {
+    background-color: rgba(255, 69, 58, 0.15) !important;
+}
+
+.error-line-border {
+    position: relative;
+    /* 移除 border-left，改用偽元素實現 */
+}
+
+.error-line-border::before {
+    content: '';
+    position: absolute;
+    left: -4px; /* 將邊框放在行號區域內 */
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #ff453a;
+    z-index: 10;
+}
+
+.CodeMirror-line.error-line-border {
+    position: relative;
+    /* 確保邊框不影響文字位置 */
+    margin-left: 0 !important;
+}
+
+.CodeMirror-line.error-line-border::before {
+    content: '⚠️';
+    position: absolute;
+    left: -24px; /* 調整圖示位置到行號區域 */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ff453a;
+    font-size: 12px;
+    z-index: 10;
+}
+
+/* 新增：確保 CodeMirror 行不會因錯誤樣式而偏移 */
+.CodeMirror-line.error-line-border .CodeMirror-line-content {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+/* 確保錯誤行的行號區域有足夠空間 */
+.CodeMirror.cm-s-material-darker .CodeMirror-gutters {
+    background: var(--background-primary);
+    border-right: 1px solid #333;
+    min-width: 40px; /* 增加最小寬度確保圖示顯示 */
+}
+
+.script-management-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.btn-secondary {
+    background-color: var(--background-ui);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+}
+
+.btn-secondary:hover {
+    background-color: var(--background-ui-hover);
+}
+
+.btn-disable {
+    background-color: #e67e22;
+    color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-disable:hover {
+    background-color: #d35400;
+}
+
+.btn-enable {
+    background-color: #27ae60;
+    color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-enable:hover {
+    background-color: #229954;
+}
+
+/* 設定視窗樣式 */
+.setting-group {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.setting-group:last-child {
+    border-bottom: none;
+}
+
+.setting-group h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    font-size: 16px;
+}
+
+.setting-item {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.setting-item label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.setting-item input[type="radio"],
+.setting-item input[type="checkbox"] {
+    margin: 0;
+}
+
+.setting-item input[type="number"] {
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: var(--text-primary);
+    width: 60px;
+}
+
+.setting-item input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color-focus-shadow);
+}
+
+.setting-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* ---  開啟暫存檔按鈕樣式 --- */
+#open-temp-file-btn {
+    background-color: #3e5066; /* 深藍灰色 */
+    color: white;
+    border: 1px solid #5a7493;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+#open-temp-file-btn:hover {
+    background-color: #5a7493;
+}
+
+#open-temp-file-btn:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color-focus-shadow);
+}
+
+/* 確保設定視窗中的 checkbox 和 label 樣式一致 */
+.setting-item input[type="checkbox"] {
+    cursor: pointer;
+}
+
+/* 減少視覺閃爍的過渡效果 */
+#pre-scripts-list {
+    transition: opacity 0.1s ease-in-out;
+}
+
+/* 禁用按鈕時的樣式 */
+.script-actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 減少重新渲染時的視覺跳躍 */
+.pre-script-item {
+    transition: opacity 0.2s ease-in-out, filter 0.2s ease-in-out;
+}
+
+/* --- 新增函數 Modal 的樣式 --- */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-secondary);
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color-focus-shadow);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}

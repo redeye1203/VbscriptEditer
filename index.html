@@ -1,0 +1,188 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>VBScript Editor with Search</title>
+    <!-- CodeMirror 核心 CSS -->
+    <link rel="stylesheet" href="./codemirror.min.css">
+    <!-- CodeMirror 深色主題 -->
+    <link rel="stylesheet" href="./material-darker.min.css">
+    <link rel="stylesheet" href="./all.min.css">
+    <!-- CodeMirror 搜尋對話框 CSS -->
+    <link rel="stylesheet" href="./dialog.min.css">
+    <!-- 我們自己的樣式 -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="toolbar">
+        <button id="run-btn">▶ 執行</button>
+        <button id="open-btn">📂 開啟</button>
+        <button id="save-btn">💾 儲存</button>
+        <button id="pre-exec-btn">⚙️ 預執行腳本</button>
+        <button id="settings-btn">⚙️ 設定</button>
+        <button id="add-function-btn">✨ 新增函數</button>
+        <button id="format-btn">🎨 格式化</button>
+        <div class="spacer"></div>
+        <button id="open-temp-file-btn" style="display: none;">開啟暫存檔</button>
+        <button id="clear-editor-btn" title="清除編輯器">清除編輯</button>
+        <button id="clear-output-btn" title="清除輸出">清除輸出</button>
+        <button id="copy-btn" title="複製程式碼">⎘ 複製</button>
+        <select id="copy-options" title="複製選項">
+            <option value="output">複製輸出</option>
+            <option value="code">複製程式碼</option>
+        </select>
+    </div>
+    <div class="main-content">
+        <div class="editor-pane" id="editor-pane" tabindex="0">
+            <textarea id="editor"></textarea>
+        </div>
+        <!-- 新增：可拖動的分隔條 -->
+        <div class="resizer" id="resizer"></div>
+        <div class="output-pane" id="output-pane" tabindex="0">
+            <pre id="output"></pre>
+            <!-- 新增：輸出區搜尋框 -->
+            <div id="output-search-box" class="search-box" style="display: none;">
+                <input type="text" id="output-search-input" placeholder="搜尋...">
+                <button id="output-search-prev">▲</button>
+                <button id="output-search-next">▼</button>
+                <span id="output-search-count">0/0</span>
+                <button id="output-search-close">✕</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增：關閉確認對話框 -->
+<div id="close-confirm-modal" class="modal" style="display: none;">
+    <div class="modal-content close-confirm-modal">
+        <div class="modal-header">
+            <span class="warning-icon">⚠️</span>
+            <h2>有未儲存的變更</h2>
+        </div>
+        <div class="modal-body">
+            <p>您有未儲存的變更，是否要在關閉前儲存？</p>
+        </div>
+        <div class="modal-footer">
+            <button id="save-and-close-btn" class="btn-primary">💾 儲存並關閉</button>
+            <button id="close-without-save-btn" class="btn-secondary">🚫 不儲存直接關閉</button>
+            <button id="cancel-close-btn" class="btn-cancel">❌ 取消</button>
+        </div>
+    </div>
+</div>
+
+<!-- 預執行腳本的彈出視窗 (Modal) -->
+<div id="pre-exec-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">×</span>
+        <h2>管理預執行 VBS 腳本</h2>
+        <p>這裡的腳本會在每次點擊「執行」時，於主編輯器程式碼前執行。</p>
+        <div class="modal-body">
+            <div id="pre-scripts-list"></div>
+            <div class="script-management-buttons">
+                <button id="import-scripts-btn" class="btn-secondary">📥 匯入腳本</button>
+                <button id="export-scripts-btn" class="btn-secondary">📤 匯出腳本</button>
+                <button id="open-location-btn" class="btn-secondary">📁 打開位置</button>
+            </div>
+            <div class="add-script-form">
+                <textarea id="new-pre-script-input" placeholder="貼上新的 VBS 程式碼..."></textarea>
+                <button id="add-pre-script-btn">新增腳本</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 設定功能的彈出視窗 (Modal) -->
+<div id="settings-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" id="settings-close-btn">×</span>
+        <h2>編輯器設定</h2>
+        <div class="modal-body">
+            <div class="setting-group">
+                <h3>縮排設定</h3>
+                <div class="setting-item">
+                    <label>
+                        <input type="radio" name="indent-type" value="tab" id="indent-tab"> 使用 Tab 字符
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>
+                        <input type="radio" name="indent-type" value="spaces" id="indent-spaces"> 使用空格
+                    </label>
+                </div>
+                <div class="setting-item" id="spaces-count-setting">
+                    <label>空格數量：
+                        <input type="number" id="spaces-count" min="1" max="8" value="4">
+                    </label>
+                </div>
+            </div>
+            <div class="setting-group">
+                <h3>字體大小控制</h3>
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="enable-font-zoom"> 啟用 Ctrl + 滑鼠滾輪調整字體大小
+                    </label>
+                </div>
+            </div>
+            <div class="setting-group">
+                <h3>暫存檔設定</h3>
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="keep-temp-file"> 保存執行暫存檔
+                    </label>
+                </div>
+                <p style="font-size: 12px; color: #888; margin: 5px 0 0 0;">(若勾選，執行後不會刪除 `Temp` 資料夾下的 `.vbs` 暫存檔)</p>
+            </div>
+            <div class="setting-actions">
+                <button id="save-settings-btn" class="btn-primary">儲存設定</button>
+                <button id="reset-settings-btn" class="btn-secondary">重置為預設值</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CodeMirror 核心 JS -->
+<script src="./codemirror.min.js"></script>
+<!-- CodeMirror VBScript 模式 -->
+<script src="./vbscript.min.js"></script>
+<!-- 新增：CodeMirror 註解功能插件 -->
+<script src="./comment.min.js"></script>
+<!-- 新增：CodeMirror 搜尋功能插件（必須按順序載入）-->
+<script src="./searchcursor.min.js"></script>
+<script src="./dialog.min.js"></script>
+<script src="./search.min.js"></script>
+<!-- VBScript Beautifier (loaded in main process) -->
+<!-- 我們的渲染邏輯 -->
+<script src="renderer.js"></script>
+
+<!-- 新增函數的彈出視窗 (Modal) -->
+<div id="add-function-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" id="add-function-close-btn">×</span>
+        <h2>新增自訂函數</h2>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="func-name">函數名稱:</label>
+                <input type="text" id="func-name" placeholder="e.g., SumNumbers">
+            </div>
+            <div class="form-group">
+                <label for="func-desc">功能描述:</label>
+                <textarea id="func-desc" rows="2" placeholder="e.g., 計算兩個數字的總和。"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="func-params">參數說明:</label>
+                <textarea id="func-params" rows="3" placeholder="e.g., - num1 (數字): 第一個數字。&#10;- num2 (數字): 第二個數字。"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="func-example">程式碼範例:</label>
+                <textarea id="func-example" rows="5" placeholder="e.g., Dim total&#10;total = SumNumbers(5, 10)"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="save-function-btn" class="btn-primary">儲存函數</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "name": "vbs-editor",
+  "version": "1.0.0",
+  "description": "A dark-themed VBScript executor and editor.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.example.vbseditor",
+    "productName": "VBScript Editor",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/.bin"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "logo.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "iconv-lite": "^0.6.3",
+    "sqlite3": "^5.1.6"
+  }
+}
