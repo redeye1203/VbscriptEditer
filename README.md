@@ -145,10 +145,6 @@ Settings are persisted in a local SQLite database and can be modified through th
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🐛 Issues & Support
-
-If you encounter any issues or have feature requests, please create an issue on the GitHub repository.
-
 ## 🔄 Version History
 
 - **v1.0.0**: Initial release with core VBScript editing and execution features
