@@ -141,14 +141,6 @@ The application uses SQLite to store:
 ### Customization
 Settings are persisted in a local SQLite database and can be modified through the settings panel or by directly editing the database file located in the application's user data directory.
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
